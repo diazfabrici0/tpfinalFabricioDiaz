@@ -16,6 +16,17 @@ class Pasajero {
         $this->telefono = "";
     }
 
+    //metodo para cargar los datos
+
+    public function cargar($dniCargar, $nombreCargar, $apellidoCargar, $telCargar, $objViaje){
+        $this->setNumDoc($dniCargar);
+        $this->setNombre($nombreCargar);
+        $this->setApellido($apellidoCargar);
+        $this->setTelefono($telCargar);
+        $this->setObjViaje($objViaje);
+    
+    }
+
     //metodos para setear
 
     public function setNombre($newName){
@@ -69,18 +80,7 @@ class Pasajero {
         return $this->mensajeOperacion;
     }
 
-    //metodo para cargar los datos
-
-    public function cargar($dniCargar, $nombreCargar, $apellidoCargar, $telCargar, $objViaje){
-        $this->setNumDoc($dniCargar);
-        $this->setNombre($nombreCargar);
-        $this->setApellido($apellidoCargar);
-        $this->setTelefono($telCargar);
-        $this->setObjViaje($objViaje);
-
-    }
-
-    public function buscarPasajero($dni){
+    public function buscar($dni){
         $base = new BaseDatos();
         $consultaPasajero = "Select * from persona where pdocumento=" .$dni;
         $resp = false;
@@ -88,7 +88,7 @@ class Pasajero {
             if($base->Ejecutar($consultaPasajero)){
 				if($row2=$base->Registro()){
                     $objViaje = new Viaje();
-                    $objViaje->buscarViaje($row2['idviaje']);
+                    $objViaje->buscar($row2['idviaje']);
 					$this->cargar($dni, $row2['pnombre'], $row2['papellido'], $objViaje, $row2['ptelefono']);
 					$resp= true;
 				}
@@ -123,7 +123,7 @@ class Pasajero {
     public function listar($condicion=""){
         $arregloPasajero = null;
         $base = new BaseDatos();
-        $consultaPasajero = "Select * from pasajero";
+        $consultaPasajero = "Select * FROM pasajero";
         if($condicion !=""){
             $consultaPasajero = $consultaPasajero. 'where' .$condicion;
         }
@@ -140,7 +140,7 @@ class Pasajero {
                     $telefono = $row2 ['ptelefono'];
 
                     $objViaje = new Viaje();
-                    $objViaje->buscarViaje($row2 ['idviaje']);
+                    $objViaje->buscar($row2 ['idviaje']);
 
                     $pasaj = new Pasajero();
                     $pasaj->cargar($numDoc, $nombre, $apellido, $telefono, $objViaje);
