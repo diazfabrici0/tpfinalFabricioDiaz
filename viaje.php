@@ -32,10 +32,16 @@ class Viaje {
         $this->pasajeros = $pasajerosCargar;
     }
 
+    /** Devuelve el valor pasado por parámetro en el atributo empresa 
+    *@return Empresa $empresa
+    */
     public function getEmpresa(){
         return $this->empresa;
     }
     
+    /** Coloca el valor pasado por parámetro en el atributo empresa 
+    *@param Empresa $empresa
+    */
     public function setEmpresa($empresaCargar){
         $this->empresa = $empresaCargar;
     }
