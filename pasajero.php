@@ -19,11 +19,11 @@ class Pasajero {
     //metodo para cargar los datos
 
     public function cargar($dniCargar, $nombreCargar, $apellidoCargar, $telCargar, $objViaje){
-        $this->setNumDoc($dniCargar);
-        $this->setNombre($nombreCargar);
-        $this->setApellido($apellidoCargar);
-        $this->setTelefono($telCargar);
-        $this->setObjViaje($objViaje);
+        $this->numDoc = $dniCargar;
+        $this->nombre = $nombreCargar;
+        $this->apellido = $apellidoCargar;
+        $this->telefono = $telCargar;
+        $this->objViaje = $objViaje;
     
     }
 

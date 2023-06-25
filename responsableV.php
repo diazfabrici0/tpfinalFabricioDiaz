@@ -5,15 +5,20 @@ class ResponsableV {
     private $nroLicencia;
     private $nombre;
     private $apellido;
-    private $refViaje;
-    private $mensajeoperacion;
+    private $mensajeOperacion;
 
     public function __construct() {
         $this->nroEmpleado = "";
         $this->nroLicencia = "";
         $this->nombre = "";
         $this->apellido = "";
-        $this->refViaje = "";
+    }
+
+    public function cargarResponsable($nroEmpleadoCargar, $nroLicenciaCargar,$nombreCargar, $apellidoCargar) {
+        $this->nroEmpleado = $nroEmpleadoCargar;
+        $this->nroLicencia = $nroLicenciaCargar;
+        $this->nombre = $nombreCargar;
+        $this->apellido = $apellidoCargar;   
     }
 
     public function getNroEmpleado() {
@@ -48,60 +53,29 @@ class ResponsableV {
         $this->apellido = $apellido;
     }
 
-    /** Devuelve el valor actual almacenado en el atributo refViajes
-    * @return Viaje $refViajes */
-    public function getRefViaje() {
-        return $this->refViaje;
+    public function getMensajeOperacion(){
+        return $this->mensajeOperacion;
     }
 
-    /** Coloca el valor pasado por parámetro en el atributo refViajes 
-    * @param Viaje $refViajes */
-    public function setRefViaje($refViaje) {
-        $this->refViaje = $refViaje;
-    }
-
-    public function setMensajeOperacion($mensajeoperacion) {
-		$this->mensajeoperacion = $mensajeoperacion;
+    public function setMensajeOperacion($mensajeOperacion) {
+		$this->mensajeOperacion = $mensajeOperacion;
 	}
 
-    public function __toString() {
-        return "Número de empleado: " . $this->getNroEmpleado() . "\n" . 
-               "Número de licencia: " . $this->getNroLicencia() . "\n" . 
-               "Nombre: " . $this->getNombre() . "\n" . 
-               "Apellido: " . $this->getApellido() . "\n\n"; 
-    }
-
-    public function cargarResponsable($nroEmpleadoCargar, $nroLicenciaCargar,$nombreCargar, $apellidoCargar) {
-        $this->setNroEmpleado($nroEmpleadoCargar);
-        $this->setNroLicencia($nroLicenciaCargar);
-        $this->setNombre($nombreCargar);
-        $this->setApellido($apellidoCargar);   
-    }
-
-    public function listarResponsable($condicion = "") {
+    public function listar($condicion = "") {
         $arregloResponsable = null;
         $base = new BaseDatos();
         $consultaResponsable = "Select * from responsable";
         if ($condicion != "") {
             $consultaResponsable = $consultaResponsable. 'where' .$condicion;
         }
-        $consultaResponsable .=" order by rapellido";
+        $consultaResponsable .=" order by rnumeroempleado";
         if ($base->Iniciar()) {
             if ($base->Ejecutar($consultaResponsable)) {
                 $arregloResponsable = array();
                 while ($row2 = $base->Registro()) {
-                    $numEmp = $row2 ['rnumeroempleado'];
-                    $numLic = $row2 ['rnumerolicencia'];
-                    $nombre = $row2 ['rnombre'];
-                    $apellido = $row2 ['rapellido'];
-
-                    $objViaje = new Viaje();
-                    $objViaje->buscar($row2 ['idviaje']);
-
-                    $responsable = new Responsable($numEmp, $numLic, $nombre, $apellido);
-                    $responsable->cargarResponsable($numEmp, $numLic, $nombre, $apellido, $objViaje);
-
-                    array_push($arregloResponsable, $responsable);
+                    $objResp = new ResponsableV();
+                    $objResp->buscar($row2['rnumeroempleado']);
+                    array_push($arregloResponsable, $objResp);
                 }
             } else {
                 $this->setMensajeOperacion($base->getError());
@@ -119,9 +93,7 @@ class ResponsableV {
         if ($base->Iniciar()) {
             if ($base->Ejecutar($consultaResponsable)) {
                 if ($row2 = $base->Registro()) {
-                    $objViaje = new Viaje();
-                    $objViaje-> buscar($row2['idviaje']);
-                    $this->cargarResponsable($nroEmp, $row2['rnombre'], $row2['rapellido'], $objViaje, $row2['rnumerolicencia']);
+                    $this->cargarResponsable($nroEmp, $row2['rnombre'], $row2['rapellido'], $row2['rnumerolicencia']);
                     $resp = true;
                 }
             } else {
@@ -133,14 +105,17 @@ class ResponsableV {
         return $resp;
     }
 
-    public function insertarResponsable() {
+    public function insertar() {
         $base = new BaseDatos();
         $resp = false;
-        $consultaInsertar = "INSERT INTO responsable(rnumeroempleado, rnombre, rapellido, rnumerolicencia, idviaje)
-        VALUES (".$this->getNroEmpleado().", '".$this->getNombre()."', '".$this->getApellido()."', '".$this->getNroLicencia()."', '".$this->getRefViaje()->getCodigoViaje()."')";
+        $consultaInsertar = "INSERT INTO responsable(rnumerolicencia, rnombre, rapellido)
+        VALUES (".$this->getNroLicencia().", '".$this->getNombre()."', '".$this->getApellido()."')";
         if ($base->Iniciar()) {
-            if ($base->Ejecutar($consultaInsertar)) {
+
+            $id = $base->devuelveIDInsercion($consultaInsertar);
+            if($id !=null){
                 $resp = true;
+                $this->setNroEmpleado($id);
             } else {
                 $this->setMensajeOperacion($base->getError());
             }
@@ -150,13 +125,13 @@ class ResponsableV {
         return $resp;
     }
 
-    public function modificarResponsable(){
+    public function modificar(){
 	    $resp =false; 
 	    $base=new BaseDatos();
-		$consultaModifica="UPDATE responsable SET rapellido='".$this->getApellido()."',rnombre='".$this->getNombre()."'
-                           ,rnuemrolicencia='".$this->getNroLicencia()."' WHERE rnumeroempleado=". $this->getNroEmpleado();
+		$consultaModificar="UPDATE responsable SET rnumerolicencia=".$this->getNroLicencia()."',rnombre='".$this->getNombre()."'
+                           ,rapellido='".$this->getApellido()."' WHERE rnumeroempleado=". $this->getNroEmpleado();
 		if($base->Iniciar()){
-			if($base->Ejecutar($consultaModifica)){
+			if($base->Ejecutar($consultaModificar)){
 			    $resp=  true;
 			}else{
 				$this->setmensajeoperacion($base->getError());
@@ -169,7 +144,7 @@ class ResponsableV {
 		return $resp;
 	}
 
-    public function eliminarResponsable(){
+    public function eliminar(){
 		$base=new BaseDatos();
 		$resp=false;
 		if($base->Iniciar()){
@@ -186,4 +161,11 @@ class ResponsableV {
 		}
 		return $resp; 
 	}
+
+    public function __toString() {
+        return "Número de empleado: " . $this->getNroEmpleado() . "\n" . 
+               "Número de licencia: " . $this->getNroLicencia() . "\n" . 
+               "Nombre: " . $this->getNombre() . "\n" . 
+               "Apellido: " . $this->getApellido() . "\n\n"; 
+    }
 }
