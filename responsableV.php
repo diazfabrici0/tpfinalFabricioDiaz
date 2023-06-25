@@ -1,6 +1,6 @@
 <?php
 
-class Responsable {
+class ResponsableV {
     private $nroEmpleado;
     private $nroLicencia;
     private $nombre;
@@ -65,7 +65,7 @@ class Responsable {
 	}
 
     public function __toString() {
-        return "Número de empleado: " . $this->getnroEmpleado() . "\n" . 
+        return "Número de empleado: " . $this->getNroEmpleado() . "\n" . 
                "Número de licencia: " . $this->getNroLicencia() . "\n" . 
                "Nombre: " . $this->getNombre() . "\n" . 
                "Apellido: " . $this->getApellido() . "\n\n"; 
@@ -112,7 +112,7 @@ class Responsable {
         return $arregloResponsable;
     }
 
-    public function buscarResponsable($nroEmp) {
+    public function buscar($nroEmp) {
         $base= new BaseDatos();
         $consultaResponsable = "select * from responsable where rnumeroempleado=".$nroEmp;
         $resp = false;
