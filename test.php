@@ -24,14 +24,14 @@ function menuPasajero(){
     //Menu pasajero
     $bool = true;
     while ($bool) {
-        echo "▄▀▄▀▄▀ MENU PASAJEROS ▀▄▀▄▀▄\n";
-        echo "1)        Ver\n";
-        echo "2)       Buscar.\n";
-        echo "3)       Modificar.\n";
-        echo "4)       Eliminar.\n";
-        echo "5)       Agregar.\n";
-        echo "6)        Salir\n";
-        echo "▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▄▀▄▀▄▀";
+        echo "▄▀▄▀▄▀▄▀▄▀▄▀ MENU PASAJEROS ▀▄▀▄▀▄▀▄▀▄▀▄\n";
+        echo "1)                Ver\n";
+        echo "2)               Buscar.\n";
+        echo "3)             Modificar.\n";
+        echo "4)              Eliminar.\n";
+        echo "5)               Agregar.\n";
+        echo "6)                Salir\n";
+        echo "▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀▄▀";
         $selected = trim(fgets(STDIN));
         switch ($selected) { 
             case '1':// opcion de ver Pasajeros
@@ -183,7 +183,7 @@ function menuPasajero(){
                         }
                     }
                     if ($objPasas->insertar()) {
-                        echo "☑ S ingreso Correctamente ☑.\n";
+                        echo "☑ Se ingreso Correctamente ☑.\n";
                     } else {
                         echo "🆇 Error al ingresar 🆇.\n";
                     }
@@ -207,13 +207,14 @@ function menuViaje(){
 
     $bool = true;
     while ($bool) {
-        echo "Menu viaje.\n
-        1. Ver\n
-        2. Buscar\n
-        3. Modificar\n
-        4. Eliminar\n
-        5. Crear\n
-        6. Salir\n";
+        echo "○•○•○•○•○•○•○[MENU VIAJE]○•○•○•○•○•○.\n";
+        echo "1).              Ver\n";
+        echo "2).             Buscar\n";
+        echo "3).           Modificar\n";
+        echo "4).            Eliminar\n";
+        echo "5).              Crear\n";
+        echo "6).              Salir\n";
+        echo "○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•○•\n";
         $opc = trim(fgets(STDIN));
         switch ($opc) {
             case '1':// Opcion para ver los Viajes
@@ -252,12 +253,13 @@ function menuViaje(){
                 $objViaje = new viaje();
                 if ($objViaje->buscar($idV)) {
                     echo $objViaje;
-                    echo "Modificar\n
-                    1) Destino\n
-                    2) Importe\n
-                    3) Cantidad Maxima de Pasajero\n
-                    4) Empresa\n
-                    5) Responsable";
+                    echo "++++++++++++Modificar+++++++++++++++\n";
+                    echo "1)           Destino\n";
+                    echo "2)           Importe\n";
+                    echo "3)    Cantidad Maxima de Pasajero\n";
+                    echo "4)            Empresa\n";
+                    echo "5)          Responsable \n";
+                    echo "++++++++++++++++++++++++++++++++++++\n";
                     $bool = true;
                     $opc=trim(fgets(STDIN));
                     switch ($opc) {
@@ -478,13 +480,14 @@ function menuResposable(){
 
     $bool = true;
     while ($bool) {
-        echo "Menu responsable.\n
-        1. Ver.\n
-        2. Buscar.\n
-        3. Modificar.\n
-        4. Eliminar.\n 
-        5. Crear.\n
-        6. Salir.\n";
+        echo "************[Menu responsable]************\n";
+        echo "1.                Ver.\n";
+        echo "2.               Buscar.\n";
+        echo "3.              Modificar.\n";
+        echo "4.               Eliminar.\n";
+        echo "5.                Crear.\n";
+        echo "6.                Salir.\n";
+        echo "******************************************\n";
         $opc = trim(fgets(STDIN));
         switch ($opc) {
             case '1':// Opcion para ver los Responsables 
@@ -534,8 +537,8 @@ function menuResposable(){
                 if ($objRes->buscar($numero)) {
                     echo $objRes;
 
-                    echo "Modificar :\n
-                    1)Numero de Licencio\n
+                    echo "Modificar:\n
+                    1) Numero de Licencio\n
                     2) Nombre\n
                     3) Apellido ";
                     $opc=trim(fgets(STDIN));
@@ -642,12 +645,14 @@ function menuEmpresa(){
     
     $bool = true;
     while ($bool) {
-        echo "Menu empresa.\n
-        1. Ver empresas.\n
-        2. Buscar empresa.\n
-        3. Modificar empresa.\n
-        4. Eliminar empresa.\n
-        5. Cargar empresa.\n";
+        echo "============Menu empresa==========\n";
+        echo "1.        Ver empresas.\n";
+        echo "2.       Buscar empresa.\n";
+        echo "3.      Modificar empresa.\n";
+        echo "4.       Eliminar empresa.\n";
+        echo "5.        Cargar empresa.\n";
+        echo "6.             Salir\n";
+        echo "===================================\n";
       
         $opc = trim(fgets(STDIN));
         switch ($opc) {
