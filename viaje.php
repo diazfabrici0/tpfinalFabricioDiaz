@@ -16,10 +16,10 @@ class Viaje {
         $this->codeViaje = 0;
         $this->destino = "";
         $this->cantMaxPasajeros = 0;
-        $this->empresa = 0;
-        $this->responsableV = 0;
+        $this->empresa = new Empresa();
+        $this->responsableV = new ResponsableV;
         $this->costo = 0;
-        $this->pasajeros = 0;
+        $this->pasajeros = [];
     }
 
     public function cargar($codViajeCargar, $destinoCargar, $cantMaxPasajerosCargar, $empresaCargar, $responsableCargar, $costoCargar, $pasajerosCargar){
@@ -56,7 +56,7 @@ class Viaje {
     }
     
     /** Devuelve el valor actual almacenado en el atributo costo
-    * @return $costo
+    * @return float $costo
     */
     public function getCosto(){
         return $this->costo;
@@ -121,7 +121,7 @@ class Viaje {
      /** Coloca el valor pasado por parámetro en el atributo cantMaxPasajeros
     * @param int $cantMaximaPasajeros 
     */
-    public function setCantcantMaxPasajeros($cantMaximaPasajeros) {
+    public function setCantMaxPasajeros($cantMaximaPasajeros) {
         $this->cantMaxPasajeros = $cantMaximaPasajeros;
     }
     
@@ -149,6 +149,7 @@ class Viaje {
     }
 
     public function buscar($codViaje){
+        $resp = false;
         $base = new BaseDatos();
         $consultaViaje = "Select * FROM viaje where idviaje=" .$codViaje;
         if($base->Iniciar()){
@@ -174,7 +175,7 @@ class Viaje {
 
     //Trae los datos de los pasajeros de la base de datos, y los setea en la clase
 
-    public function traePasajeros(){
+    public function traerPasajeros(){
         $pasajero = new Pasajero();
         $condicion = "idviaje =".$this->getCodigoViaje();
         $colPasajeros = $pasajero->listar($condicion);
@@ -213,9 +214,9 @@ class Viaje {
     }
 
     /**
-	 * Lista a los pasajeros, se le puede pasar una condición para filtrar la lista
+	 * Lista a los viajes, se le puede pasar una condición para filtrar la lista
      * @param string $condicion
-	 * @return $arregloPasajeros
+	 * @return array $arrayViajes
 	 */	
     public function listar($condicion=""){
         $arrayViajes = null;
@@ -248,7 +249,7 @@ class Viaje {
     public function modificar(){
         $resp = false;
         $base = new BaseDatos();
-        $consultaModificar = "UPDATE viaje SET vdestino='".$this->getDestino()."',vcantmaxpasajeros='".$this->getCantMaxPasajeros()."',idempresa='".$this->getEmpresa()->getIdEmpresa().",rnumeroempleado=".$this->getResponsableV()->getNumEmpleado().",vimporte=".$this->getCosto()."WHERE idviaje =".$this->getCodigoViaje();
+        $consultaModificar = "UPDATE viaje SET vdestino='".$this->getDestino()."',vcantmaxpasajeros='".$this->getCantMaxPasajeros()."',idempresa='".$this->getEmpresa()->getIdEmpresa().",rnumeroempleado=".$this->getResponsableV()->getNumEmpleado().",vimporte=".$this->getCosto()."' WHERE idviaje =".$this->getCodigoViaje();
         
         if($base->Iniciar()){
             if($base->Ejecutar($consultaModificar)){
@@ -263,19 +264,48 @@ class Viaje {
     }
 
     public function eliminar(){
-        $base = new BaseDatos();
-        $resp = false;
+        $base=new BaseDatos();
+        $resp=false;
         if($base->Iniciar()){
-            $consultaBorrar = "DELETE FROM viaje WHERE idviaje =".$this->getCodigoViaje();
-            if($base->Ejecutar($consultaBorrar)){
-                $resp = true;
-            }else{
-                $this->setMensajeOperacion($base->getError());
+            $consultaEliminaPasajeros = "DELETE FROM pasajero WHERE idviaje = " . $this->getCodigoViaje();
+            if ($base->Ejecutar($consultaEliminaPasajeros)) {
+                $consultaBorra="DELETE FROM viaje WHERE idviaje=".$this->getCodigoViaje();
+                if($base->Ejecutar($consultaBorra)){
+                    $resp = true;
+                }else{
+                    $this->setmensajeoperacion($base->getError());
+
+                }
+            } else {
+                $this->setmensajeoperacion($base->getError());
             }
         }else{
-            $this->setMensajeOperacion($base->getError());
+                $this->setmensajeoperacion($base->getError());
+
         }
-        return $resp;
+        return $resp; 
     }
+
+    
+
+    public function venderPasaje(){
+        $costo = $this->getCosto();
+        $sumaCosto = $this->getSumaCostos();
+
+        $sumaCosto = $sumaCosto + $costo;
+        $this->setSumaCostos($sumaCosto);
+    }
+
+    public function __toString(){
+        $pasajeros = $this->mostrarPasajeros();
+        return "Código de viaje: " . $this->getCodigoViaje() . "\n".  
+        "Destino: " . $this->getDestino() . "\n" .
+        "Cantidad máxima de pasajeros: " . $this->getCantMaxPasajeros() . "\n".
+        "Costo: " . $this->getCosto() . "\n" . 
+        "Suma de costos: " . $this->getSumaCostos() . "\n" . 
+        "Empresa: " . $this->getEmpresa() . "\n" .
+        "Responsable: " . "\n" .$this->getResponsableV() . "\n" . 
+        $pasajeros;
+    } 
 
 }

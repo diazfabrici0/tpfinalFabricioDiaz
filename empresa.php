@@ -104,13 +104,17 @@ class Empresa {
 
 
 
-
+    /**
+     * Lista las empresas segun la condicion
+     *@param string $condicion
+     *@return array $arregloEmpresa
+     */
     public function listar($condicion=""){
         $arregloEmpresa = null;
         $base = new BaseDatos();
-        $consultaPasajero = "Select * FROM empresa";
+        $consultaEmpresa = "Select * FROM empresa";
         if($condicion !=""){
-            $consultaEmpresa = $consultaPasajero. 'where' .$condicion;
+            $consultaEmpresa = $consultaEmpresa. 'where' .$condicion;
         }
         $consultaEmpresa .=" order by enombre";
 
@@ -123,11 +127,11 @@ class Empresa {
                     $nombre = $row2['enombre'];
                     $direccion = $row2['edireccion'];
 
-                    $objViaje = new Viaje();
-                    $colViajes = $objViaje->listar('idempresa='.$idEmpresa);
+                    //$objViaje = new Viaje();
+                    //$colViajes = $objViaje->listar('idempresa='.$idEmpresa);
 
                     $empre= new Empresa();
-                    $empre->cargar($idEmpresa, $nombre, $direccion, []);
+                    $empre->cargar($idEmpresa, $nombre, $direccion);
 
                     array_push($arregloEmpresa, $empre);
                 }
@@ -144,9 +148,9 @@ class Empresa {
 
 
     public function modificar(){
-	    $resp =false; 
+	    $resp = false; 
 	    $base=new BaseDatos();
-		$consultaModificar="UPDATE empresa SET enombre='".$this->getEmpNombre()."',edireccion='".$this->getEmpdireccion()." WHERE idempresa=".$this->getIdEmpresa();
+		$consultaModificar="UPDATE empresa SET enombre='".$this->getEmpnombre()."', edireccion='".$this->getEmpdireccion()."' WHERE idempresa=".$this->getIdEmpresa();
 		if($base->Iniciar()){
 			if($base->Ejecutar($consultaModificar)){
 			    $resp=  true;

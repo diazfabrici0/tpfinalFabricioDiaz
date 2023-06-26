@@ -61,6 +61,11 @@ class ResponsableV {
 		$this->mensajeOperacion = $mensajeOperacion;
 	}
 
+    /**
+	 * Lista a los responsables, se le puede pasar una condición para filtrar la lista
+     * @param string $condicion
+	 * @return array $arregloResponsable
+	 */	
     public function listar($condicion = "") {
         $arregloResponsable = null;
         $base = new BaseDatos();
@@ -86,14 +91,14 @@ class ResponsableV {
         return $arregloResponsable;
     }
 
-    public function buscar($nroEmp) {
+    public function buscar($nroEmpleado) {
         $base= new BaseDatos();
-        $consultaResponsable = "select * from responsable where rnumeroempleado=".$nroEmp;
+        $consultaResponsable = "select * from responsable where rnumeroempleado=".$nroEmpleado;
         $resp = false;
         if ($base->Iniciar()) {
             if ($base->Ejecutar($consultaResponsable)) {
                 if ($row2 = $base->Registro()) {
-                    $this->cargarResponsable($nroEmp, $row2['rnombre'], $row2['rapellido'], $row2['rnumerolicencia']);
+                    $this->cargarResponsable($nroEmpleado, $row2['rnumerolicencia'], $row2['rnombre'], $row2['rapellido']);
                     $resp = true;
                 }
             } else {

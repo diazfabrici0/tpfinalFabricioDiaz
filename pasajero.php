@@ -14,6 +14,7 @@ class Pasajero {
         $this->nombre = "";
         $this->apellido = "";
         $this->telefono = "";
+        $this->objViaje = new Viaje();
     }
 
     //metodo para cargar los datos
@@ -82,14 +83,14 @@ class Pasajero {
 
     public function buscar($dni){
         $base = new BaseDatos();
-        $consultaPasajero = "Select * from persona where pdocumento=" .$dni;
+        $consultaPasajero = "Select * from pasajero where pdocumento=" .$dni;
         $resp = false;
         if($base->Iniciar()){
             if($base->Ejecutar($consultaPasajero)){
 				if($row2=$base->Registro()){
                     $objViaje = new Viaje();
                     $objViaje->buscar($row2['idviaje']);
-					$this->cargar($dni, $row2['pnombre'], $row2['papellido'], $objViaje, $row2['ptelefono']);
+					$this->cargar($dni, $row2['pnombre'], $row2['papellido'], $row2['ptelefono'], $objViaje);
 					$resp= true;
 				}
             }else{
@@ -104,8 +105,8 @@ class Pasajero {
     public function insertar(){
         $base = new BaseDatos();
         $resp = false;
-        $consultaInsertar = "INSERT INTO pasajero (pdocumento, pnombre, papellido, pteleofno, idviaje)
-        VALUES (".$this->getNumDoc().", '".$this->getNombre()."','".$this->getApellido()."',".$this->getTelefono(). ",'".$this->getObjViaje()->getCodeViaje()."')";
+        $consultaInsertar = "INSERT INTO pasajero (pdocumento, pnombre, papellido, ptelefono, idviaje)
+        VALUES (".$this->getNumDoc().", '".$this->getNombre()."', '".$this->getApellido()."', '".$this->getTelefono()."', '".$this->getObjViaje()->getCodigoViaje()."')";
 	
         if($base->Iniciar()){
             if($base->Ejecutar($consultaInsertar)){
@@ -120,14 +121,19 @@ class Pasajero {
         return $resp;
     }
 
+    /**
+	 * Lista a los pasajeros, se le puede pasar una condición para filtrar la lista
+     * @param string $condicion
+	 * @return array $arregloPasajeros
+	 */	
     public function listar($condicion=""){
         $arregloPasajero = null;
         $base = new BaseDatos();
         $consultaPasajero = "Select * FROM pasajero";
         if($condicion !=""){
-            $consultaPasajero = $consultaPasajero. 'where' .$condicion;
+            $consultaPasajero = $consultaPasajero. ' where ' .$condicion;
         }
-        $consultaPasajero .=" order by papellido";
+        $consultaPasajero .=' order by papellido';
 
         if($base->Iniciar()){
             if($base->Ejecutar($consultaPasajero)){
@@ -162,7 +168,7 @@ class Pasajero {
         $resp = false;
         $base = new BaseDatos();
         $consultaModificar = "UPDATE pasajero SET pnombre='".$this->getNombre()."',papellido='".$this->getApellido()."'
-        ,ptelefono=".$this->getTelefono().", idviaje=".$this->getObjViaje()->getCodeViaje()." WHERE pdocumento=".$this->getNumDoc();
+        ,ptelefono=".$this->getTelefono().", idviaje=".$this->getObjViaje()->getCodeViaje()."' WHERE pdocumento=".$this->getNumDoc();
         
         if($base->Iniciar()){
             if($base->Ejecutar($consultaModificar)){
