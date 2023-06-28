@@ -151,7 +151,7 @@ class Viaje {
     public function buscar($codViaje){
         $resp = false;
         $base = new BaseDatos();
-        $consultaViaje = "Select * FROM viaje where idviaje=" .$codViaje;
+        $consultaViaje = ' Select * FROM viaje where idviaje=' .$codViaje;
         if($base->Iniciar()){
             if($base->Ejecutar($consultaViaje)){
                 if($row2 = $base->Registro()){
@@ -223,7 +223,7 @@ class Viaje {
         $base = new BaseDatos();
         $consultaViaje = "Select * FROM viaje";
         if($condicion !=""){
-            $consultaViaje = $consultaViaje. 'WHERE' .$condicion;
+            $consultaViaje = $consultaViaje. ' WHERE ' .$condicion;
         }
         $consultaViaje .=" order by idviaje";
 
@@ -301,8 +301,7 @@ class Viaje {
         return "Código de viaje: " . $this->getCodigoViaje() . "\n".  
         "Destino: " . $this->getDestino() . "\n" .
         "Cantidad máxima de pasajeros: " . $this->getCantMaxPasajeros() . "\n".
-        "Costo: " . $this->getCosto() . "\n" . 
-        "Suma de costos: " . $this->getSumaCostos() . "\n" . 
+        "Costo: " . $this->getCosto() . "\n" .  
         "Empresa: " . $this->getEmpresa() . "\n" .
         "Responsable: " . "\n" .$this->getResponsableV() . "\n" . 
         $pasajeros;

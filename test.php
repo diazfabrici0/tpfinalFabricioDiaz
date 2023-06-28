@@ -6,7 +6,23 @@ include('empresa.php');
 include('pasajero.php');
 include('viaje.php');
 
+function eliminaEmpresa($idEmpresa){
+    $objViaje = new Viaje();
+    $cad = "";
+    $colViajes = $objViaje->listar("idempresa = ".$idEmpresa);
+    if(!empty($colViajes)){
+        $cad = "\n---Tiene que eliminar los viajes asociados a la empresa para poder eliminarla---\n";
+    } else {
+        $objEmpresa = new Empresa();
+        $objEmpresa->buscar($idEmpresa);
+        $objEmpresa->eliminar();
+        
+        $cad = "Se eliminó la empresa correctamente \n";
 
+    }
+    return $cad;
+
+}
 
 function menuPrincipal(){
 
@@ -376,22 +392,6 @@ function menuViaje(){
             case '5': //Opcion Para crear un viaje
                 
                 $objViaje = new viaje();
-                     echo "Ingrese el id del viaje: \n";
-                    $idV = trim(fgets(STDIN));
-                    $bool= true;
-                   while ($bool) {
-
-                    if($objViaje->buscar($idV)){
-                        echo "El id ya existe\n";
-                        echo "Ingrese otro\n";
-                        $idV = trim(fgets(STDIN));
-                    }else{
-                        $objViaje->setCodigoViaje($idV);
-                        $bool = false;                     
-                    } 
-                   
-                   }
-                   
                     echo "Ingrese el destino: \n";
                     $destino = trim(fgets(STDIN));                   
                    
@@ -728,11 +728,8 @@ function menuEmpresa(){
                 $idE = trim(fgets(STDIN));
                 $objEmpresa = new Empresa();
                 if ($objEmpresa->buscar($idE)) {
-                    if($objEmpresa->eliminar()){
-                        echo "La empresa se ha eliminado.\n";
-                    }else{
-                        echo "La empresa no se ha podido eliminar.\n";                       
-                    }
+                    $texto = eliminaEmpresa($idE);
+                    echo $texto;
                 } else {
                     echo "No existe la empresa.\n";
                 }
@@ -742,18 +739,6 @@ function menuEmpresa(){
                     //cargar empresa
                     $bool = true;
                     $objEmpresa = new empresa();
-                        echo "Ingrese el id de la empresa: \n";
-                        $bool = true;
-                       while ($bool) {
-                        $idE = trim(fgets(STDIN));
-                        
-                        if($objEmpresa->buscar($idE)){
-                            echo "El id ya esta utilizado.\n";
-                        }else{                       
-                            $objEmpresa->setIdEmpresa($idE);
-                            $bool = false;
-                        }
-                       }
                    
                     echo "Ingrese el nombre de la empresa: \n";
                     $nombre = trim(fgets(STDIN));
@@ -761,7 +746,7 @@ function menuEmpresa(){
                     $colEmpresa=$objEmpresa->listar();
                     if ($colEmpresa == null) {
                         
-                        $oriDireccion = readline("Ingrese nueva dirección: ");
+                        $oriDireccion = readline("Ingrese la dirección: ");
                         $empresa = new Empresa();
                         $empresa->cargar(1, $nombre, $oriDireccion);
                         $inserto = $empresa->insertar();
